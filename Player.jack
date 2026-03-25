@@ -1,0 +1,97 @@
+class Player{
+    field int x, y;
+
+    constructor Player new(){               // this is the player tank class, it takes care of drawing the tank, its movement and whatever variables we need
+        let x = 250;
+        let y = 236;
+        do draw(true);
+        return this;
+    }
+
+    method void dispose(){
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void draw(boolean color){                    // I don't know why I did coordinates like this instead of using the upper left corner like everywhere else, but it works
+        do Screen.setColor(color);
+        do Screen.drawRectangle(x, y, x + 7, y + 7);
+        do Screen.drawRectangle(x - 8, y + 8, x + 15, y + 11);
+        do Screen.drawRectangle(x - 12, y + 12, x + 19, y + 19);
+        return;
+    }
+
+    method int getX(){
+        return x;
+    }
+
+    method int getY(){
+        return y;
+    }
+
+    method void moveLeft(){             // the coordinates complicated this even more, but this was the first thing I implemented
+        do Screen.setColor(false);
+        do Screen.drawLine(x + 7, y, x + 7, y + 7);
+        do Screen.drawLine(x + 15, y + 8, x + 15, y + 11);
+        do Screen.drawLine(x + 19, y + 12, x + 19, y + 19);
+        do Screen.setColor(true);
+        do Screen.drawLine(x - 1, y, x - 1, y + 7);
+        do Screen.drawLine(x - 9, y + 8, x - 9, y + 11);
+        do Screen.drawLine(x - 13, y + 12, x - 13, y + 19);
+        let x = x - 1;
+        return;
+    }
+
+    method void moveRight(){
+        do Screen.setColor(false);
+        do Screen.drawLine(x, y, x, y + 7);
+        do Screen.drawLine(x - 8, y + 8, x - 8, y + 11);
+        do Screen.drawLine(x - 12, y + 12, x - 12, y + 19);
+        do Screen.setColor(true);
+        do Screen.drawLine(x + 8, y, x + 8, y + 7);
+        do Screen.drawLine(x + 16, y + 8, x + 16, y + 11);
+        do Screen.drawLine(x + 20, y + 12, x + 20, y + 19);
+        let x = x + 1;
+        return;
+    }
+
+    method boolean isHit(int a, int b){                                     // this method checks if the player got hit by an alien bullet
+        if ((b > y) & (b < (y + 19)) & (a > (x - 12)) & (a < (x + 19))){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    method void playDeathAnimation(){                   // this method plays the death animation if player dies
+        do draw(false);
+        do deathAnimation(true);
+        do Sys.wait(40);
+        do deathAnimation(false);
+        do Sys.wait(60);
+        do deathAnimation(true);
+        do Sys.wait(40);
+        do deathAnimation(false);
+        do Sys.wait(60);
+        do deathAnimation(true);
+        do Sys.wait(40);
+        do deathAnimation(false);
+        return;
+    }
+
+    method void deathAnimation(boolean color){
+        do Screen.setColor(color);
+        do Screen.drawRectangle(x - 12, y, x - 9, y + 3);
+        do Screen.drawRectangle(x + 4, y, x + 7, y + 3);
+        do Screen.drawRectangle(x - 4, y + 4, x - 1, y + 7);
+        do Screen.drawRectangle(x + 12, y + 4, x + 15, y + 7);
+        do Screen.drawRectangle(x - 12, y + 8, x - 9, y + 11);
+        do Screen.drawRectangle(x, y + 8, x + 7, y + 11);
+        do Screen.drawRectangle(x + 16, y + 8, x + 19, y + 11);
+        do Screen.drawRectangle(x - 12, y + 12, x - 1, y + 15);
+        do Screen.drawRectangle(x + 12, y + 12, x + 19, y + 15);
+        do Screen.drawRectangle(x - 12, y + 16, x + 19, y + 19);
+        return;
+    }
+}

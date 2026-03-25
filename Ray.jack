@@ -1,0 +1,75 @@
+class Ray{
+    field int x, y;
+    field boolean zigged;
+
+    constructor Ray new(int a, int b){      // this is the alien bullet (ray) class, it takes care of drawing the bullet, its movement and whatever variables we need
+        let x = a;
+        let y = b;
+        let zigged = true;                  // the alien ray is a zig zag so we keep track of what direction we draw next
+        do drawZig(true, 0);
+        return this;
+    }
+
+    method void dispose(){
+        if (zigged){
+            do drawZig(false, 10);
+            do drawZag(false, 5);
+            do drawZig(false, 0);
+        }
+        else{
+            do drawZag(false, 10);
+            do drawZig(false, 5);
+            do drawZag(false, 0);
+        }
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void drawZig(boolean color, int erase){             // erase helps us erase the previous zig zag pattern, so it can be visible for as long as possible
+        do Screen.setColor(color);
+        do Screen.drawLine(x, y - erase, x, (y + 1) - erase);
+        do Screen.drawLine(x + 1, (y + 1) - erase, x + 1, (y + 2) - erase);
+        do Screen.drawLine(x + 2, (y + 2) - erase, x + 2, (y + 3) - erase);
+        do Screen.drawLine(x + 3, (y + 3) - erase, x + 3, (y + 4) - erase);
+        return;
+    }
+
+    method void drawZag(boolean color, int erase){
+        do Screen.setColor(color);
+        do Screen.drawLine(x + 3, y - erase, x + 3, (y + 1) - erase);
+        do Screen.drawLine(x + 2, (y + 1) - erase, x + 2, (y + 2) - erase);
+        do Screen.drawLine(x + 1, (y + 2) - erase, x + 1, (y + 3) - erase);
+        do Screen.drawLine(x, (y + 3) - erase, x, (y + 4) - erase);
+        return;
+    }
+
+    method int getX(){
+        return x;
+    }
+
+    method int getY(){
+        return y;
+    }
+
+    method boolean isHit(int a, int b){                             // this checks if the alien bullet got hit by the player bullet
+        if ((b > y) & (b < (y + 19)) & (a > x) & (a < (x + 19))){
+            return true;
+        }
+        return false;
+    }
+
+    method void move(){         // this moves the alien bullet
+        let y = y + 5;
+        if(zigged){
+            do drawZig(false, 15);
+            do drawZag(true, 0);
+            let zigged = false;
+        }
+        else{
+            do drawZag(false, 15);
+            do drawZig(true, 0);
+            let zigged = true;
+        }
+        return;
+    }
+}

@@ -1,0 +1,1586 @@
+function Game.new 0
+push constant 13
+call Memory.alloc 1
+pop pointer 0
+push pointer 0
+call Game.setGameScreen 1
+pop temp 0
+call Player.new 0
+pop this 0
+push constant 0
+pop this 7
+push pointer 0
+push constant 0
+call Game.updateScore 2
+pop temp 0
+push constant 3
+pop this 8
+push pointer 0
+push constant 0
+call Game.updateLives 2
+pop temp 0
+push pointer 0
+call Game.createAliens 1
+pop temp 0
+push pointer 0
+call Game.createBunkers 1
+pop temp 0
+push pointer 0
+return
+function Game.dispose 0
+push argument 0
+pop pointer 0
+push this 0
+call Player.dispose 1
+pop temp 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function Game.setGameScreen 0
+push argument 0
+pop pointer 0
+push constant 0
+push constant 0
+call Output.moveCursor 2
+pop temp 0
+push constant 7
+call String.new 1
+push constant 83
+call String.appendChar 2
+push constant 99
+call String.appendChar 2
+push constant 111
+call String.appendChar 2
+push constant 114
+call String.appendChar 2
+push constant 101
+call String.appendChar 2
+push constant 58
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+push constant 0
+push constant 25
+call Output.moveCursor 2
+pop temp 0
+push constant 14
+call String.new 1
+push constant 83
+call String.appendChar 2
+push constant 80
+call String.appendChar 2
+push constant 65
+call String.appendChar 2
+push constant 67
+call String.appendChar 2
+push constant 69
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 73
+call String.appendChar 2
+push constant 78
+call String.appendChar 2
+push constant 86
+call String.appendChar 2
+push constant 65
+call String.appendChar 2
+push constant 68
+call String.appendChar 2
+push constant 69
+call String.appendChar 2
+push constant 82
+call String.appendChar 2
+push constant 83
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+push constant 0
+push constant 50
+call Output.moveCursor 2
+pop temp 0
+push constant 7
+call String.new 1
+push constant 76
+call String.appendChar 2
+push constant 105
+call String.appendChar 2
+push constant 118
+call String.appendChar 2
+push constant 101
+call String.appendChar 2
+push constant 115
+call String.appendChar 2
+push constant 58
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+push constant 0
+return
+function Game.createAliens 7
+push argument 0
+pop pointer 0
+push constant 3
+pop local 2
+push constant 40
+call Array.new 1
+pop this 1
+push constant 0
+pop this 2
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push local 2
+lt
+not
+if-goto WHILE_END0
+push local 0
+push constant 0
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 12
+pop local 3
+push constant 26
+pop local 4
+label IF_FALSE0
+push local 0
+push constant 1
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 10
+pop local 3
+push constant 32
+pop local 4
+label IF_FALSE1
+push local 0
+push constant 2
+eq
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push constant 8
+pop local 3
+push constant 40
+pop local 4
+label IF_FALSE2
+push constant 512
+push local 3
+push local 4
+call Math.multiply 2
+sub
+push constant 2
+call Math.divide 2
+pop local 5
+push constant 48
+push local 0
+push constant 28
+call Math.multiply 2
+add
+pop local 6
+push constant 0
+pop local 1
+label WHILE_EXP1
+push local 1
+push local 3
+lt
+not
+if-goto WHILE_END1
+push this 2
+push this 1
+add
+push local 5
+push local 1
+push local 4
+call Math.multiply 2
+add
+push local 6
+push local 0
+push constant 1
+add
+call Alien.new 3
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push this 2
+push constant 1
+add
+pop this 2
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_EXP1
+label WHILE_END1
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return
+function Game.createBunkers 4
+push argument 0
+pop pointer 0
+push constant 6
+pop this 10
+push constant 72
+pop local 1
+push constant 58
+pop local 2
+push constant 200
+pop local 3
+push this 10
+call Array.new 1
+pop this 9
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push this 10
+lt
+not
+if-goto WHILE_END0
+push local 0
+push this 9
+add
+push local 2
+push local 0
+push local 1
+call Math.multiply 2
+add
+push local 3
+call Bunker.new 2
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return
+function Game.movePlayerBullet 0
+push argument 0
+pop pointer 0
+push this 3
+call Bullet.getY 1
+push constant 15
+lt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 3
+call Bullet.dispose 1
+pop temp 0
+push constant 0
+pop this 4
+goto IF_END0
+label IF_FALSE0
+push this 3
+call Bullet.move 1
+pop temp 0
+label IF_END0
+push constant 0
+return
+function Game.moveAlienBullet 0
+push argument 0
+pop pointer 0
+push this 5
+call Ray.getY 1
+push constant 240
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 5
+call Ray.dispose 1
+pop temp 0
+push constant 0
+pop this 6
+goto IF_END0
+label IF_FALSE0
+push this 5
+call Ray.move 1
+pop temp 0
+label IF_END0
+push constant 0
+return
+function Game.bulletsCollide 4
+push argument 0
+pop pointer 0
+push this 3
+call Bullet.getX 1
+pop local 0
+push this 3
+call Bullet.getY 1
+pop local 1
+push this 5
+call Ray.getX 1
+pop local 2
+push this 5
+call Ray.getY 1
+pop local 3
+push local 0
+push local 2
+push constant 4
+add
+lt
+push local 0
+push constant 4
+add
+push local 2
+gt
+and
+push local 1
+push local 3
+push constant 15
+add
+lt
+and
+push local 1
+push constant 5
+add
+push local 3
+gt
+and
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+not
+return
+label IF_FALSE0
+push constant 0
+return
+function Game.updateScore 0
+push argument 0
+pop pointer 0
+push this 7
+push argument 1
+add
+pop this 7
+push constant 0
+push constant 7
+call Output.moveCursor 2
+pop temp 0
+push constant 4
+call String.new 1
+push constant 32
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+push constant 0
+push constant 7
+call Output.moveCursor 2
+pop temp 0
+push this 7
+call Output.printInt 1
+pop temp 0
+push constant 0
+return
+function Game.updateLives 0
+push argument 0
+pop pointer 0
+push this 8
+push argument 1
+add
+pop this 8
+push constant 0
+push constant 57
+call Output.moveCursor 2
+pop temp 0
+push constant 3
+call String.new 1
+push constant 32
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+push constant 0
+push constant 57
+call Output.moveCursor 2
+pop temp 0
+push this 8
+call Output.printInt 1
+pop temp 0
+push constant 0
+return
+function Game.playerWon 0
+push argument 0
+pop pointer 0
+call Screen.clearScreen 0
+pop temp 0
+push constant 10
+push constant 25
+call Output.moveCursor 2
+pop temp 0
+push constant 13
+call String.new 1
+push constant 87
+call String.appendChar 2
+push constant 65
+call String.appendChar 2
+push constant 86
+call String.appendChar 2
+push constant 69
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 67
+call String.appendChar 2
+push constant 76
+call String.appendChar 2
+push constant 69
+call String.appendChar 2
+push constant 65
+call String.appendChar 2
+push constant 82
+call String.appendChar 2
+push constant 69
+call String.appendChar 2
+push constant 68
+call String.appendChar 2
+push constant 33
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+push constant 12
+push constant 25
+call Output.moveCursor 2
+pop temp 0
+push constant 12
+call String.new 1
+push constant 89
+call String.appendChar 2
+push constant 79
+call String.appendChar 2
+push constant 85
+call String.appendChar 2
+push constant 82
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 83
+call String.appendChar 2
+push constant 67
+call String.appendChar 2
+push constant 79
+call String.appendChar 2
+push constant 82
+call String.appendChar 2
+push constant 69
+call String.appendChar 2
+push constant 58
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+push this 7
+call Output.printInt 1
+pop temp 0
+push constant 18
+push constant 20
+call Output.moveCursor 2
+pop temp 0
+push constant 23
+call String.new 1
+push constant 80
+call String.appendChar 2
+push constant 82
+call String.appendChar 2
+push constant 69
+call String.appendChar 2
+push constant 83
+call String.appendChar 2
+push constant 83
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 83
+call String.appendChar 2
+push constant 80
+call String.appendChar 2
+push constant 65
+call String.appendChar 2
+push constant 67
+call String.appendChar 2
+push constant 69
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 84
+call String.appendChar 2
+push constant 79
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 67
+call String.appendChar 2
+push constant 79
+call String.appendChar 2
+push constant 78
+call String.appendChar 2
+push constant 84
+call String.appendChar 2
+push constant 73
+call String.appendChar 2
+push constant 78
+call String.appendChar 2
+push constant 85
+call String.appendChar 2
+push constant 69
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+push pointer 0
+call Game.waitForContinue 1
+pop temp 0
+push constant 0
+return
+function Game.waitForContinue 1
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+label WHILE_EXP0
+push constant 0
+not
+not
+if-goto WHILE_END0
+call Keyboard.keyPressed 0
+pop local 0
+push local 0
+push constant 32
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push pointer 0
+call Game.nextWave 1
+pop temp 0
+push constant 0
+return
+label IF_FALSE0
+push local 0
+push constant 140
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+call Sys.halt 0
+pop temp 0
+label IF_FALSE1
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return
+function Game.nextWave 3
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push this 2
+lt
+not
+if-goto WHILE_END0
+push local 0
+push this 1
+add
+pop pointer 1
+push that 0
+pop local 1
+push local 1
+call Alien.dispose 1
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+pop local 0
+label WHILE_EXP1
+push local 0
+push this 10
+lt
+not
+if-goto WHILE_END1
+push local 0
+push this 9
+add
+pop pointer 1
+push that 0
+pop local 2
+push local 2
+call Bunker.dispose 1
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP1
+label WHILE_END1
+push this 0
+call Player.dispose 1
+pop temp 0
+push this 12
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 11
+call Spaceship.dispose 1
+pop temp 0
+push constant 0
+pop this 12
+label IF_FALSE0
+push this 6
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push this 5
+call Ray.dispose 1
+pop temp 0
+push constant 0
+pop this 6
+label IF_FALSE1
+push this 4
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push this 3
+call Bullet.dispose 1
+pop temp 0
+push constant 0
+pop this 4
+label IF_FALSE2
+call Screen.clearScreen 0
+pop temp 0
+push pointer 0
+call Game.setGameScreen 1
+pop temp 0
+push pointer 0
+push constant 0
+call Game.updateScore 2
+pop temp 0
+push pointer 0
+push constant 1
+call Game.updateLives 2
+pop temp 0
+push pointer 0
+call Game.createAliens 1
+pop temp 0
+push pointer 0
+call Game.createBunkers 1
+pop temp 0
+call Player.new 0
+pop this 0
+push constant 0
+return
+function Game.playerLost 0
+push argument 0
+pop pointer 0
+call Screen.clearScreen 0
+pop temp 0
+push constant 10
+push constant 25
+call Output.moveCursor 2
+pop temp 0
+push constant 17
+call String.new 1
+push constant 89
+call String.appendChar 2
+push constant 79
+call String.appendChar 2
+push constant 85
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 87
+call String.appendChar 2
+push constant 69
+call String.appendChar 2
+push constant 82
+call String.appendChar 2
+push constant 69
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 73
+call String.appendChar 2
+push constant 78
+call String.appendChar 2
+push constant 86
+call String.appendChar 2
+push constant 65
+call String.appendChar 2
+push constant 68
+call String.appendChar 2
+push constant 69
+call String.appendChar 2
+push constant 68
+call String.appendChar 2
+push constant 33
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+push constant 12
+push constant 25
+call Output.moveCursor 2
+pop temp 0
+push constant 12
+call String.new 1
+push constant 89
+call String.appendChar 2
+push constant 79
+call String.appendChar 2
+push constant 85
+call String.appendChar 2
+push constant 82
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 83
+call String.appendChar 2
+push constant 67
+call String.appendChar 2
+push constant 79
+call String.appendChar 2
+push constant 82
+call String.appendChar 2
+push constant 69
+call String.appendChar 2
+push constant 58
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+push this 7
+call Output.printInt 1
+pop temp 0
+push constant 0
+return
+function Game.run 16
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+push constant 6
+pop local 7
+push constant 100
+pop local 8
+push constant 1
+pop local 10
+push constant 0
+pop local 13
+push constant 59
+push this 2
+call Math.multiply 2
+push constant 17
+push local 13
+call Math.multiply 2
+push constant 7
+push local 8
+call Math.multiply 2
+add
+sub
+pop local 15
+label WHILE_EXP0
+push local 0
+push constant 140
+eq
+not
+not
+if-goto WHILE_END0
+call Keyboard.keyPressed 0
+pop local 0
+push local 0
+push constant 130
+eq
+push this 0
+call Player.getX 1
+push constant 20
+gt
+and
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 0
+call Player.moveLeft 1
+pop temp 0
+label IF_FALSE0
+push local 0
+push constant 132
+eq
+push this 0
+call Player.getX 1
+push constant 484
+lt
+and
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push this 0
+call Player.moveRight 1
+pop temp 0
+label IF_FALSE1
+push local 0
+push constant 32
+eq
+push this 4
+not
+and
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push this 0
+call Player.getX 1
+push this 0
+call Player.getY 1
+call Bullet.new 2
+pop this 3
+push constant 0
+not
+pop this 4
+label IF_FALSE2
+push this 4
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push pointer 0
+call Game.movePlayerBullet 1
+pop temp 0
+push constant 0
+pop local 1
+push constant 0
+pop local 12
+label WHILE_EXP1
+push local 12
+not
+push local 1
+push this 2
+lt
+and
+not
+if-goto WHILE_END1
+push local 1
+push this 1
+add
+pop pointer 1
+push that 0
+pop local 2
+push local 2
+call Alien.isAlive 1
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push local 2
+push this 3
+call Bullet.getX 1
+push this 3
+call Bullet.getY 1
+call Alien.isHit 3
+pop local 12
+push local 12
+if-goto IF_TRUE5
+goto IF_FALSE5
+label IF_TRUE5
+push local 2
+call Alien.kill 1
+pop local 14
+push local 13
+push constant 1
+add
+pop local 13
+push pointer 0
+push local 14
+call Game.updateScore 2
+pop temp 0
+push this 3
+call Bullet.dispose 1
+pop temp 0
+push constant 0
+pop this 4
+label IF_FALSE5
+label IF_FALSE4
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_EXP1
+label WHILE_END1
+push constant 0
+pop local 1
+push constant 0
+pop local 12
+label WHILE_EXP2
+push local 12
+not
+push local 1
+push this 10
+lt
+and
+not
+if-goto WHILE_END2
+push local 1
+push this 9
+add
+pop pointer 1
+push that 0
+pop local 3
+push local 3
+push this 3
+call Bullet.getX 1
+push this 3
+call Bullet.getY 1
+call Bunker.isHit 3
+pop local 12
+push local 12
+if-goto IF_TRUE6
+goto IF_FALSE6
+label IF_TRUE6
+push this 3
+call Bullet.dispose 1
+pop temp 0
+push constant 0
+pop this 4
+label IF_FALSE6
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_EXP2
+label WHILE_END2
+push this 12
+if-goto IF_TRUE7
+goto IF_FALSE7
+label IF_TRUE7
+push this 11
+push this 3
+call Bullet.getX 1
+push this 3
+call Bullet.getY 1
+call Spaceship.isHit 3
+if-goto IF_TRUE8
+goto IF_FALSE8
+label IF_TRUE8
+push this 11
+call Spaceship.kill 1
+pop local 14
+push this 11
+call Spaceship.dispose 1
+pop temp 0
+push constant 0
+pop this 12
+push pointer 0
+push local 14
+call Game.updateScore 2
+pop temp 0
+push this 3
+call Bullet.dispose 1
+pop temp 0
+push constant 0
+pop this 4
+label IF_FALSE8
+label IF_FALSE7
+push this 6
+if-goto IF_TRUE9
+goto IF_FALSE9
+label IF_TRUE9
+push pointer 0
+call Game.bulletsCollide 1
+if-goto IF_TRUE10
+goto IF_FALSE10
+label IF_TRUE10
+push this 3
+call Bullet.explode 1
+pop temp 0
+push this 3
+call Bullet.dispose 1
+pop temp 0
+push constant 0
+pop this 4
+push this 5
+call Ray.dispose 1
+pop temp 0
+push constant 0
+pop this 6
+label IF_FALSE10
+label IF_FALSE9
+label IF_FALSE3
+push this 6
+if-goto IF_TRUE11
+goto IF_FALSE11
+label IF_TRUE11
+push local 9
+push constant 0
+eq
+if-goto IF_TRUE12
+goto IF_FALSE12
+label IF_TRUE12
+push pointer 0
+call Game.moveAlienBullet 1
+pop temp 0
+push constant 5
+pop local 9
+push this 0
+push this 5
+call Ray.getX 1
+push this 5
+call Ray.getY 1
+push constant 4
+add
+call Player.isHit 3
+if-goto IF_TRUE13
+goto IF_FALSE13
+label IF_TRUE13
+push this 0
+call Player.playDeathAnimation 1
+pop temp 0
+push this 0
+call Player.dispose 1
+pop temp 0
+call Player.new 0
+pop this 0
+push pointer 0
+push constant 1
+neg
+call Game.updateLives 2
+pop temp 0
+push this 4
+if-goto IF_TRUE14
+goto IF_FALSE14
+label IF_TRUE14
+push this 3
+call Bullet.dispose 1
+pop temp 0
+push constant 0
+pop this 4
+label IF_FALSE14
+push this 5
+call Ray.dispose 1
+pop temp 0
+push constant 0
+pop this 6
+push constant 200
+pop local 8
+label IF_FALSE13
+push constant 0
+pop local 1
+push constant 0
+pop local 12
+label WHILE_EXP3
+push local 12
+not
+push local 1
+push this 10
+lt
+and
+not
+if-goto WHILE_END3
+push local 1
+push this 9
+add
+pop pointer 1
+push that 0
+pop local 3
+push local 3
+push this 5
+call Ray.getX 1
+push this 5
+call Ray.getY 1
+call Bunker.isHit 3
+pop local 12
+push local 12
+if-goto IF_TRUE15
+goto IF_FALSE15
+label IF_TRUE15
+push this 5
+call Ray.dispose 1
+pop temp 0
+push constant 0
+pop this 6
+label IF_FALSE15
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_EXP3
+label WHILE_END3
+goto IF_END12
+label IF_FALSE12
+push local 9
+push constant 1
+sub
+pop local 9
+label IF_END12
+goto IF_END11
+label IF_FALSE11
+push local 8
+push constant 0
+gt
+not
+if-goto IF_TRUE16
+goto IF_FALSE16
+label IF_TRUE16
+push this 2
+push constant 1
+sub
+pop local 1
+label WHILE_EXP4
+push local 1
+push constant 1
+neg
+gt
+not
+if-goto WHILE_END4
+push local 1
+push this 1
+add
+pop pointer 1
+push that 0
+pop local 2
+push local 2
+call Alien.isAlive 1
+if-goto IF_TRUE17
+goto IF_FALSE17
+label IF_TRUE17
+push local 2
+call Alien.getX 1
+push this 0
+call Player.getX 1
+push constant 40
+sub
+gt
+push local 2
+call Alien.getX 1
+push this 0
+call Player.getX 1
+push constant 48
+add
+lt
+and
+if-goto IF_TRUE18
+goto IF_FALSE18
+label IF_TRUE18
+push local 2
+call Alien.getType 1
+push constant 3
+eq
+if-goto IF_TRUE19
+goto IF_FALSE19
+label IF_TRUE19
+push local 2
+call Alien.getX 1
+push constant 10
+add
+push local 2
+call Alien.getY 1
+push constant 20
+add
+call Ray.new 2
+pop this 5
+label IF_FALSE19
+push local 2
+call Alien.getType 1
+push constant 2
+eq
+if-goto IF_TRUE20
+goto IF_FALSE20
+label IF_TRUE20
+push local 2
+call Alien.getX 1
+push constant 7
+add
+push local 2
+call Alien.getY 1
+push constant 20
+add
+call Ray.new 2
+pop this 5
+label IF_FALSE20
+push local 2
+call Alien.getType 1
+push constant 1
+eq
+if-goto IF_TRUE21
+goto IF_FALSE21
+label IF_TRUE21
+push local 2
+call Alien.getX 1
+push constant 4
+add
+push local 2
+call Alien.getY 1
+push constant 20
+add
+call Ray.new 2
+pop this 5
+label IF_FALSE21
+push constant 0
+not
+pop this 6
+push constant 5
+pop local 9
+push constant 1
+neg
+pop local 1
+label IF_FALSE18
+label IF_FALSE17
+push local 1
+push constant 1
+sub
+pop local 1
+goto WHILE_EXP4
+label WHILE_END4
+push constant 100
+pop local 8
+goto IF_END16
+label IF_FALSE16
+push local 8
+push constant 1
+sub
+pop local 8
+label IF_END16
+label IF_END11
+push local 13
+push this 2
+eq
+if-goto IF_TRUE22
+goto IF_FALSE22
+label IF_TRUE22
+push pointer 0
+call Game.playerWon 1
+pop temp 0
+push constant 0
+pop local 0
+push constant 6
+pop local 7
+push constant 100
+pop local 8
+push constant 1
+pop local 10
+push constant 0
+pop local 13
+push constant 100
+call Sys.wait 1
+pop temp 0
+label IF_FALSE22
+push this 8
+push constant 1
+lt
+if-goto IF_TRUE23
+goto IF_FALSE23
+label IF_TRUE23
+push pointer 0
+call Game.playerLost 1
+pop temp 0
+push constant 0
+return
+label IF_FALSE23
+push constant 0
+pop local 1
+label WHILE_EXP5
+push local 1
+push this 2
+lt
+not
+if-goto WHILE_END5
+push local 1
+push this 1
+add
+pop pointer 1
+push that 0
+pop local 2
+push local 2
+call Alien.getY 1
+push constant 179
+gt
+if-goto IF_TRUE24
+goto IF_FALSE24
+label IF_TRUE24
+push pointer 0
+call Game.playerLost 1
+pop temp 0
+push constant 0
+return
+label IF_FALSE24
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_EXP5
+label WHILE_END5
+push this 12
+not
+if-goto IF_TRUE25
+goto IF_FALSE25
+label IF_TRUE25
+push local 15
+push constant 0
+eq
+if-goto IF_TRUE26
+goto IF_FALSE26
+label IF_TRUE26
+push local 10
+push constant 1
+eq
+if-goto IF_TRUE27
+goto IF_FALSE27
+label IF_TRUE27
+push constant 0
+call Spaceship.new 1
+pop this 11
+goto IF_END27
+label IF_FALSE27
+push constant 0
+not
+call Spaceship.new 1
+pop this 11
+label IF_END27
+push constant 0
+not
+pop this 12
+push constant 59
+push this 2
+call Math.multiply 2
+push constant 17
+push local 13
+call Math.multiply 2
+push constant 7
+push local 8
+call Math.multiply 2
+add
+sub
+pop local 15
+goto IF_END26
+label IF_FALSE26
+push local 15
+push constant 1
+sub
+pop local 15
+label IF_END26
+label IF_FALSE25
+push local 7
+push constant 0
+gt
+not
+if-goto IF_TRUE28
+goto IF_FALSE28
+label IF_TRUE28
+push constant 0
+pop local 1
+label WHILE_EXP6
+push local 1
+push this 2
+lt
+not
+if-goto WHILE_END6
+push local 1
+push this 1
+add
+pop pointer 1
+push that 0
+pop local 2
+push local 2
+call Alien.isAlive 1
+pop local 4
+push local 4
+if-goto IF_TRUE29
+goto IF_FALSE29
+label IF_TRUE29
+push local 2
+push local 10
+call Alien.move 2
+pop temp 0
+push local 2
+call Alien.getX 1
+push constant 480
+gt
+push local 2
+call Alien.getX 1
+push constant 10
+lt
+or
+if-goto IF_TRUE30
+goto IF_FALSE30
+label IF_TRUE30
+push constant 0
+not
+pop local 11
+label IF_FALSE30
+label IF_FALSE29
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_EXP6
+label WHILE_END6
+push this 12
+if-goto IF_TRUE31
+goto IF_FALSE31
+label IF_TRUE31
+push this 11
+call Spaceship.move 1
+pop temp 0
+push this 11
+call Spaceship.getX 1
+push constant 474
+gt
+push this 11
+call Spaceship.getX 1
+or
+push constant 6
+lt
+if-goto IF_TRUE32
+goto IF_FALSE32
+label IF_TRUE32
+push this 11
+call Spaceship.dispose 1
+pop temp 0
+push constant 0
+pop this 12
+label IF_FALSE32
+label IF_FALSE31
+push local 11
+if-goto IF_TRUE33
+goto IF_FALSE33
+label IF_TRUE33
+push constant 0
+pop local 1
+label WHILE_EXP7
+push local 1
+push this 2
+lt
+not
+if-goto WHILE_END7
+push local 1
+push this 1
+add
+pop pointer 1
+push that 0
+pop local 2
+push local 2
+call Alien.isAlive 1
+pop local 4
+push local 4
+if-goto IF_TRUE34
+goto IF_FALSE34
+label IF_TRUE34
+push local 2
+push constant 0
+call Alien.move 2
+pop temp 0
+label IF_FALSE34
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_EXP7
+label WHILE_END7
+push local 10
+neg
+pop local 10
+push constant 0
+pop local 11
+label IF_FALSE33
+push local 13
+push constant 24
+gt
+if-goto IF_TRUE35
+goto IF_FALSE35
+label IF_TRUE35
+push constant 1
+pop local 7
+goto IF_END35
+label IF_FALSE35
+push local 13
+push constant 19
+gt
+if-goto IF_TRUE36
+goto IF_FALSE36
+label IF_TRUE36
+push constant 2
+pop local 7
+goto IF_END36
+label IF_FALSE36
+push local 13
+push constant 14
+gt
+if-goto IF_TRUE37
+goto IF_FALSE37
+label IF_TRUE37
+push constant 3
+pop local 7
+goto IF_END37
+label IF_FALSE37
+push local 13
+push constant 9
+gt
+if-goto IF_TRUE38
+goto IF_FALSE38
+label IF_TRUE38
+push constant 4
+pop local 7
+goto IF_END38
+label IF_FALSE38
+push local 13
+push constant 4
+gt
+if-goto IF_TRUE39
+goto IF_FALSE39
+label IF_TRUE39
+push constant 5
+pop local 7
+goto IF_END39
+label IF_FALSE39
+push constant 6
+pop local 7
+label IF_END39
+label IF_END38
+label IF_END37
+label IF_END36
+label IF_END35
+goto IF_END28
+label IF_FALSE28
+push local 7
+push constant 1
+sub
+pop local 7
+label IF_END28
+push constant 6
+call Sys.wait 1
+pop temp 0
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return

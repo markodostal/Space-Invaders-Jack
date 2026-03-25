@@ -1,0 +1,391 @@
+class Alien{
+    field int x, y;
+    field boolean alive;
+    field int type;
+
+    constructor Alien new(int a, int b, int t){         // this is the alien class, it takes care of drawing the aliens, their movement and whatever variables we need
+        let x = a;
+        let y = b;
+        let type = t;
+        let alive = true;
+        if (type = 1){
+            do drawSquid(true);
+        }
+        if (type = 2){
+            do drawCrab(true);
+        }
+        if (type = 3){
+            do drawOctopus(true);
+        }
+        return this;
+    }
+
+    method void dispose(){
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method int kill(){                      // this method kills the alien and plays their death animation
+        let alive = false;
+        if (type = 1){
+            do drawSquid(false);
+            do playDeathAnimation();
+            return 30;
+        }
+        if (type = 2){
+            do drawCrab(false);
+            do playDeathAnimation();
+            return 20;
+        }
+        if (type = 3){
+            do drawOctopus(false);
+            do playDeathAnimation();
+            return 10;
+        }
+        return 0;
+    }
+
+    method void playDeathAnimation(){
+        do deathAnimation(true);
+        do Sys.wait(30);
+        do deathAnimation(false);
+        do Sys.wait(60);
+        do deathAnimation(true);
+        do Sys.wait(30);
+        do deathAnimation(false);
+        return;
+    }
+
+    method void deathAnimation(boolean color){
+        do Screen.setColor(color);
+        do Screen.drawRectangle(x, y, x + 3, y + 3);
+        do Screen.drawRectangle(x + 16, y, x + 19, y + 3);
+        do Screen.drawRectangle(x + 4, y + 4, x + 7, y + 7);
+        do Screen.drawRectangle(x + 12, y + 4, x + 15, y + 7);
+        do Screen.drawRectangle(x + 4, y + 12, x + 7, y + 15);
+        do Screen.drawRectangle(x + 12, y + 12, x + 15, y + 15);
+        do Screen.drawRectangle(x, y + 16, x + 3, y + 19);
+        do Screen.drawRectangle(x + 16, y + 16, x + 19, y + 19);
+        return;
+    }
+
+    method boolean isHit(int a, int b){             // this method helps us check if the player hit an alien with a bullet
+        if (type = 1){
+            if ((b > y) & (b < (y + 19)) & (a > x) & (a < (x + 19))){
+                return true;
+            }
+        }
+        if (type = 2){
+            if ((b > y) & (b < (y + 19)) & (a > x) & (a < (x + 23))){
+                return true;
+            }
+        }
+        if (type = 3){
+           if ((b > y) & (b < (y + 19)) & (a > x) & (a < (x + 27))){
+                return true;
+            } 
+        }
+        return false;
+    }
+
+    method void move(int direction){
+        if (type = 1){
+            do moveSquid(direction);
+        }
+        if (type = 2){
+            do moveCrab(direction);
+        }
+        if (type = 3){
+            do moveOctopus(direction);
+        }
+        return;
+    }
+
+    method boolean isAlive(){
+        return alive;
+    }
+
+    method int getX(){
+        return x;
+    }
+
+    method int getY(){
+        return y;
+    }
+
+    method int getType(){
+        return type;
+    }
+
+
+    // SQUID
+
+
+    method void drawSquid(boolean color){                            // this method draws the squid type alien, top row, smaller aliens and there are more of them, 30 points
+        do Screen.setColor(color);
+        do Screen.drawRectangle(x + 8, y, x + 11, y + 3);
+        do Screen.drawRectangle(x + 4, y + 4, x + 15, y + 7);
+        do Screen.drawRectangle(x, y + 8, x + 3, y + 11);
+        do Screen.drawRectangle(x + 8, y + 8, x + 11, y + 11);
+        do Screen.drawRectangle(x + 16, y + 8, x + 19, y + 11);
+        do Screen.drawRectangle(x + 4, y + 12, x + 15, y + 15);
+        do Screen.drawRectangle(x, y + 16, x + 3, y + 19);
+        do Screen.drawRectangle(x + 8, y + 16, x + 11, y + 19);
+        do Screen.drawRectangle(x + 16, y + 16, x + 19, y + 19);
+        return;
+    }
+
+    method void moveSquid(int direction){                    // this method takes care of squid movement, I didn't want to erase everything and draw again, but use however much already drawn I can, it got very long and complicated because of that
+        do Screen.setColor(false);
+        if (direction = 1){
+            do Screen.drawRectangle(x + 8, y, x + 9, y + 3);
+            do Screen.drawRectangle(x + 4, y + 4, x + 5, y + 7);
+            do Screen.drawRectangle(x, y + 8, x + 1, y + 11);
+            do Screen.drawRectangle(x + 8, y + 8, x + 9, y + 11);
+            do Screen.drawRectangle(x + 16, y + 8, x + 17, y + 11);
+            do Screen.drawRectangle(x + 4, y + 12, x + 5, y + 15);
+            do Screen.drawRectangle(x, y + 16, x + 1, y + 19);
+            do Screen.drawRectangle(x + 8, y + 16, x + 9, y + 19);
+            do Screen.drawRectangle(x + 16, y + 16, x + 17, y + 19);
+            do Screen.setColor(true);
+            do Screen.drawRectangle(x + 12, y, x + 13, y + 3);
+            do Screen.drawRectangle(x + 16, y + 4, x + 17, y + 7);
+            do Screen.drawRectangle(x + 4, y + 8, x + 5, y + 11);
+            do Screen.drawRectangle(x + 12, y + 8, x + 13, y + 11);
+            do Screen.drawRectangle(x + 20, y + 8, x + 21, y + 11);
+            do Screen.drawRectangle(x + 16, y + 12, x + 17, y + 15);
+            do Screen.drawRectangle(x + 4, y + 16, x + 5, y + 19);
+            do Screen.drawRectangle(x + 12, y + 16, x + 13, y + 19);
+            do Screen.drawRectangle(x + 20, y + 16, x + 21, y + 19);
+            let x = x + 2;
+        }
+        else{
+            if (direction = -1){
+                do Screen.drawRectangle(x + 10, y, x + 11, y + 3);
+                do Screen.drawRectangle(x + 14, y + 4, x + 15, y + 7);
+                do Screen.drawRectangle(x + 2, y + 8, x + 3, y + 11);
+                do Screen.drawRectangle(x + 10, y + 8, x + 11, y + 11);
+                do Screen.drawRectangle(x + 18, y + 8, x + 19, y + 11);
+                do Screen.drawRectangle(x + 14, y + 12, x + 15, y + 15);
+                do Screen.drawRectangle(x + 2, y + 16, x + 3, y + 19);
+                do Screen.drawRectangle(x + 10, y + 16, x + 11, y + 19);
+                do Screen.drawRectangle(x + 18, y + 16, x + 19, y + 19);
+                do Screen.setColor(true);
+                do Screen.drawRectangle(x + 6, y, x + 7, y + 3);
+                do Screen.drawRectangle(x + 2, y + 4, x + 3, y + 7);
+                do Screen.drawRectangle(x - 2, y + 8, x - 1, y + 11);
+                do Screen.drawRectangle(x + 6, y + 8, x + 7, y + 11);
+                do Screen.drawRectangle(x + 14, y + 8, x + 15, y + 11);
+                do Screen.drawRectangle(x + 2, y + 12, x + 3, y + 15);
+                do Screen.drawRectangle(x - 2, y + 16, x - 1, y + 19);
+                do Screen.drawRectangle(x + 6, y + 16, x + 7, y + 19);
+                do Screen.drawRectangle(x + 14, y + 16, x + 15, y + 19);
+                let x = x - 2;
+            }
+            else{
+                do Screen.drawRectangle(x + 8, y, x + 11, y + 3);
+                do Screen.drawRectangle(x + 4, y + 4, x + 11, y + 7);
+                do Screen.drawRectangle(x + 12, y + 4, x + 15, y + 7);
+                do Screen.drawRectangle(x, y + 8, x + 3, y + 11);
+                do Screen.drawRectangle(x + 16, y + 8, x + 19, y + 11);
+                do Screen.drawRectangle(x + 4, y + 12, x + 7, y + 15);
+                do Screen.drawRectangle(x + 12, y + 12, x + 15, y + 15);
+                do Screen.drawRectangle(x, y + 16, x + 3, y + 19);
+                do Screen.drawRectangle(x + 16, y + 16, x + 19, y + 19);
+                do Screen.setColor(true);
+                do Screen.drawRectangle(x + 4, y + 8, x + 7, y + 11);
+                do Screen.drawRectangle(x + 12, y + 8, x + 15, y + 11);
+                do Screen.drawRectangle(x, y + 12, x + 3, y + 15);
+                do Screen.drawRectangle(x + 16, y + 12, x + 19, y + 15);
+                do Screen.drawRectangle(x + 4, y + 16, x + 7, y + 19);
+                do Screen.drawRectangle(x + 12, y + 16, x + 15, y + 19);
+                do Screen.drawRectangle(x, y + 20, x + 3, y + 23);
+                do Screen.drawRectangle(x + 8, y + 20, x + 11, y + 23);
+                do Screen.drawRectangle(x + 16, y + 20, x + 19, y + 23);
+                let y = y + 4;
+            }
+        }
+        return;
+    }
+
+
+    // CRAB
+
+
+    method void drawCrab(boolean color){                             // this method draws the crab type alien, middle row, medium size aliens, 20 points
+        do Screen.setColor(color);
+        do Screen.drawRectangle(x, y, x + 7, y + 3);
+        do Screen.drawRectangle(x + 16, y, x + 23, y + 3);
+        do Screen.drawRectangle(x + 4, y + 4, x + 19, y + 7);
+        do Screen.drawRectangle(x, y + 8, x + 3, y + 11);
+        do Screen.drawRectangle(x + 8, y + 8, x + 15, y + 11);
+        do Screen.drawRectangle(x + 20, y + 8, x + 23, y + 11);
+        do Screen.drawRectangle(x, y + 12, x + 23, y + 15);
+        do Screen.drawRectangle(x + 4, y + 16, x + 7, y + 19);
+        do Screen.drawRectangle(x + 16, y + 16, x + 19, y + 19);
+        return;
+    }
+
+    method void moveCrab(int direction){                    // this method takes care of crab movement, I didn't want to erase everything and draw again, but use however much already drawn I can, it got very long and complicated because of that
+        do Screen.setColor(false);
+        if (direction = 1){
+            do Screen.drawRectangle(x, y, x + 1, y + 3);
+            do Screen.drawRectangle(x + 16, y, x + 17, y + 3);
+            do Screen.drawRectangle(x + 4, y + 4, x + 5, y + 7);
+            do Screen.drawRectangle(x, y + 8, x + 1, y + 11);
+            do Screen.drawRectangle(x + 8, y + 8, x + 9, y + 11);
+            do Screen.drawRectangle(x + 20, y + 8, x + 21, y + 11);
+            do Screen.drawRectangle(x, y + 12, x + 1, y + 15);
+            do Screen.drawRectangle(x + 4, y + 16, x + 5, y + 19);
+            do Screen.drawRectangle(x + 16, y + 16, x + 17, y + 19);
+            do Screen.setColor(true);
+            do Screen.drawRectangle(x + 8, y, x + 9, y + 3);
+            do Screen.drawRectangle(x + 24, y, x + 25, y + 3);
+            do Screen.drawRectangle(x + 20, y + 4, x + 21, y + 7);
+            do Screen.drawRectangle(x + 4, y + 8, x + 5, y + 11);
+            do Screen.drawRectangle(x + 16, y + 8, x + 17, y + 11);
+            do Screen.drawRectangle(x + 24, y + 8, x + 25, y + 11);
+            do Screen.drawRectangle(x + 24, y + 12, x + 25, y + 15);
+            do Screen.drawRectangle(x + 8, y + 16, x + 9, y + 19);
+            do Screen.drawRectangle(x + 20, y + 16, x + 21, y + 19);
+            let x = x + 2;
+        }
+        else{
+            if (direction = -1){
+                do Screen.drawRectangle(x + 6, y, x + 7, y + 3);
+                do Screen.drawRectangle(x + 22, y, x + 23, y + 3);
+                do Screen.drawRectangle(x + 18, y + 4, x + 19, y + 7);
+                do Screen.drawRectangle(x + 2, y + 8, x + 3, y + 11);
+                do Screen.drawRectangle(x + 14, y + 8, x + 15, y + 11);
+                do Screen.drawRectangle(x + 22, y + 8, x + 23, y + 11);
+                do Screen.drawRectangle(x + 22, y + 12, x + 23, y + 15);
+                do Screen.drawRectangle(x + 6, y + 16, x + 7, y + 19);
+                do Screen.drawRectangle(x + 18, y + 16, x + 19, y + 19);
+                do Screen.setColor(true);
+                do Screen.drawRectangle(x - 2, y, x - 1, y + 3);
+                do Screen.drawRectangle(x + 14, y, x + 15, y + 3);
+                do Screen.drawRectangle(x + 2, y + 4, x + 3, y + 7);
+                do Screen.drawRectangle(x - 2, y + 8, x - 1, y + 11);
+                do Screen.drawRectangle(x + 6, y + 8, x + 7, y + 11);
+                do Screen.drawRectangle(x + 18, y + 8, x + 19, y + 11);
+                do Screen.drawRectangle(x - 2, y + 12, x - 1, y + 15);
+                do Screen.drawRectangle(x + 2, y + 16, x + 3, y + 19);
+                do Screen.drawRectangle(x + 14, y + 16, x + 15, y + 19);
+                let x = x - 2;
+            }
+            else{
+                do Screen.drawRectangle(x, y, x + 7, y + 3);
+                do Screen.drawRectangle(x + 16, y, x + 23, y + 3);
+                do Screen.drawRectangle(x + 8, y + 4, x + 15, y + 7);
+                do Screen.drawRectangle(x, y + 8, x + 3, y + 11);
+                do Screen.drawRectangle(x + 20, y + 8, x + 23, y + 11);
+                do Screen.drawRectangle(x + 4, y + 12, x + 7, y + 15);
+                do Screen.drawRectangle(x + 16, y + 12, x + 19, y + 15);
+                do Screen.setColor(true);
+                do Screen.drawRectangle(x, y + 4, x + 3, y + 7);
+                do Screen.drawRectangle(x + 20, y + 4, x + 23, y + 7);
+                do Screen.drawRectangle(x + 4, y + 8, x + 7, y + 11);
+                do Screen.drawRectangle(x + 16, y + 8, x + 19, y + 11);
+                do Screen.drawRectangle(x, y + 16, x + 3, y + 19);
+                do Screen.drawRectangle(x + 8, y + 16, x + 15, y + 19);
+                do Screen.drawRectangle(x + 20, y + 16, x + 23, y + 19);
+                do Screen.drawRectangle(x + 4, y + 20, x + 7, y + 23);
+                do Screen.drawRectangle(x + 16, y + 20, x + 19, y + 23);
+                let y = y + 4;
+            }
+        }
+        return;
+    }
+
+
+    // OCTOPUS
+
+
+    method void drawOctopus(boolean color){                          // this method draws the octopus type alien, bottom row, large aliens, 10 points
+        do Screen.setColor(color);
+        do Screen.drawRectangle(x + 4, y, x + 23, y + 3);
+        do Screen.drawRectangle(x, y + 4, x + 3, y + 7);
+        do Screen.drawRectangle(x + 12, y + 4, x + 15, y + 7);
+        do Screen.drawRectangle(x + 24, y + 4, x + 27, y + 7);
+        do Screen.drawRectangle(x, y + 8, x + 27, y + 11);
+        do Screen.drawRectangle(x + 4, y + 12, x + 11, y + 15);
+        do Screen.drawRectangle(x + 16, y + 12, x + 23, y + 15);
+        do Screen.drawRectangle(x, y + 16, x + 7, y + 19);
+        do Screen.drawRectangle(x + 12, y + 16, x + 15, y + 19);
+        do Screen.drawRectangle(x + 20, y + 16, x + 27, y + 19);
+        return;
+    }
+
+    method void moveOctopus(int direction){                    // this method takes care of octopus movement, I didn't want to erase everything and draw again, but use however much already drawn I can, it got very long and complicated because of that
+        do Screen.setColor(false);
+        if (direction = 1){
+            do Screen.drawRectangle(x + 4, y, x + 5, y + 3);
+            do Screen.drawRectangle(x, y + 4, x + 1, y + 11);
+            do Screen.drawRectangle(x + 12, y + 4, x + 13, y + 7);
+            do Screen.drawRectangle(x + 24, y + 4, x + 25, y + 7);
+            do Screen.drawRectangle(x + 4, y + 12, x + 5, y + 15);
+            do Screen.drawRectangle(x + 16, y + 12, x + 17, y + 15);
+            do Screen.drawRectangle(x, y + 16, x + 1, y + 19);
+            do Screen.drawRectangle(x + 12, y + 16, x + 13, y + 19);
+            do Screen.drawRectangle(x + 20, y + 16, x + 21, y + 19);
+            do Screen.setColor(true);
+            do Screen.drawRectangle(x + 24, y, x + 25, y + 3);
+            do Screen.drawRectangle(x + 4, y + 4, x + 5, y + 7);
+            do Screen.drawRectangle(x + 16, y + 4, x + 17, y + 7);
+            do Screen.drawRectangle(x + 28, y + 4, x + 29, y + 11);
+            do Screen.drawRectangle(x + 12, y + 12, x + 13, y + 15);
+            do Screen.drawRectangle(x + 24, y + 12, x + 25, y + 15);
+            do Screen.drawRectangle(x + 8, y + 16, x + 9, y + 19);
+            do Screen.drawRectangle(x + 16, y + 16, x + 17, y + 19);
+            do Screen.drawRectangle(x + 28, y + 16, x + 29, y + 19);
+            let x = x + 2;
+        }
+        else{
+            if (direction = -1){
+                do Screen.drawRectangle(x + 22, y, x + 23, y + 3);
+                do Screen.drawRectangle(x + 2, y + 4, x + 3, y + 7);
+                do Screen.drawRectangle(x + 14, y + 4, x + 15, y + 7);
+                do Screen.drawRectangle(x + 26, y + 4, x + 27, y + 11);
+                do Screen.drawRectangle(x + 10, y + 12, x + 11, y + 15);
+                do Screen.drawRectangle(x + 22, y + 12, x + 23, y + 15);
+                do Screen.drawRectangle(x + 6, y + 16, x + 7, y + 19);
+                do Screen.drawRectangle(x + 14, y + 16, x + 15, y + 19);
+                do Screen.drawRectangle(x + 26, y + 16, x + 27, y + 19);
+                do Screen.setColor(true);
+                do Screen.drawRectangle(x + 2, y, x + 3, y + 3);
+                do Screen.drawRectangle(x - 2, y + 4, x - 1, y + 11);
+                do Screen.drawRectangle(x + 10, y + 4, x + 11, y + 7);
+                do Screen.drawRectangle(x + 22, y + 4, x + 23, y + 7);
+                do Screen.drawRectangle(x + 2, y + 12, x + 3, y + 15);
+                do Screen.drawRectangle(x + 14, y + 12, x + 15, y + 15);
+                do Screen.drawRectangle(x - 2, y + 16, x - 1, y + 19);
+                do Screen.drawRectangle(x + 10, y + 16, x + 11, y + 19);
+                do Screen.drawRectangle(x + 18, y + 16, x + 19, y + 19);
+                let x = x - 2;
+            }
+            else{
+                do Screen.drawRectangle(x + 4, y, x + 23, y + 3);
+                do Screen.drawRectangle(x, y + 4, x + 3, y + 7);
+                do Screen.drawRectangle(x + 24, y + 4, x + 27, y + 7);
+                do Screen.drawRectangle(x + 4, y + 8, x + 11, y + 11);
+                do Screen.drawRectangle(x + 16, y + 8, x + 23, y + 11);
+                do Screen.drawRectangle(x, y + 16, x + 3, y + 19);
+                do Screen.drawRectangle(x + 12, y + 16, x + 15, y + 19);
+                do Screen.drawRectangle(x + 24, y + 16, x + 27, y + 19);
+                do Screen.setColor(true);
+                do Screen.drawRectangle(x + 4, y + 4, x + 11, y + 7);
+                do Screen.drawRectangle(x + 16, y + 4, x + 23, y + 7);
+                do Screen.drawRectangle(x, y + 12, x + 3, y + 15);
+                do Screen.drawRectangle(x + 12, y + 12, x + 15, y + 15);
+                do Screen.drawRectangle(x + 24, y + 12, x + 27, y + 15);
+                do Screen.drawRectangle(x + 8, y + 16, x + 11, y + 19);
+                do Screen.drawRectangle(x + 16, y + 16, x + 19, y + 19);
+                do Screen.drawRectangle(x, y + 20, x + 7, y + 23);
+                do Screen.drawRectangle(x + 12, y + 20, x + 15, y + 23);
+                do Screen.drawRectangle(x + 20, y + 20, x + 27, y + 23);
+                let y = y + 4;
+            }
+        }
+        return;
+    }
+}

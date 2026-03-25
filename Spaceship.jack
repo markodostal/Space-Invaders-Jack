@@ -1,0 +1,134 @@
+class Spaceship{
+    field int x, y;
+    field boolean direction;
+
+    constructor Spaceship new(boolean dir){     // this is the spaceship class, it takes care of drawing the spaceship, its movement and whatever variables we need
+        let direction = dir;
+        if (direction){
+            let x = 6;
+            let y = 20;
+        }
+        else{
+            let x = 474;
+            let y = 20;
+        }
+        do draw(true);
+        return this;
+    }
+
+    method void dispose(){
+        do draw(false);
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void draw(boolean color){            // this method draws the spaceship
+        do Screen.setColor(color);
+        do Screen.drawRectangle(x + 8, y, x + 19, y + 3);
+        do Screen.drawRectangle(x + 4, y + 4, x + 23, y + 7);
+        do Screen.drawRectangle(x, y + 8, x + 3, y + 11);
+        do Screen.drawRectangle(x + 8, y + 8, x + 11, y + 11);
+        do Screen.drawRectangle(x + 16, y + 8, x + 19, y + 11);
+        do Screen.drawRectangle(x + 24, y + 8, x + 27, y + 11);
+        do Screen.drawRectangle(x, y + 12, x + 27, y + 15);
+        do Screen.drawRectangle(x + 4, y + 16, x + 7, y + 19);
+        do Screen.drawRectangle(x + 12, y + 16, x + 15, y + 19);
+        do Screen.drawRectangle(x + 20, y + 16, x + 23, y + 19);
+        return;
+    }
+
+    method void move(){                         // this method moves the spaceship
+        if (direction){
+            do Screen.setColor(false);
+            do Screen.drawRectangle(x + 8, y, x + 11, y + 3);
+            do Screen.drawRectangle(x + 4, y + 4, x + 7, y + 7);
+            do Screen.drawRectangle(x, y + 8, x + 3, y + 11);
+            do Screen.drawRectangle(x + 8, y + 8, x + 11, y + 11);
+            do Screen.drawRectangle(x + 16, y + 8, x + 19, y + 11);
+            do Screen.drawRectangle(x + 24, y + 8, x + 27, y + 11);
+            do Screen.drawRectangle(x, y + 12, x + 3, y + 15);
+            do Screen.drawRectangle(x + 4, y + 16, x + 7, y + 19);
+            do Screen.drawRectangle(x + 12, y + 16, x + 15, y + 19);
+            do Screen.drawRectangle(x + 20, y + 16, x + 23, y + 19);
+            do Screen.setColor(true);
+            do Screen.drawRectangle(x + 20, y, x + 23, y + 3);
+            do Screen.drawRectangle(x + 24, y + 4, x + 27, y + 7);
+            do Screen.drawRectangle(x + 4, y + 8, x + 7, y + 11);
+            do Screen.drawRectangle(x + 12, y + 8, x + 15, y + 11);
+            do Screen.drawRectangle(x + 20, y + 8, x + 23, y + 11);
+            do Screen.drawRectangle(x + 28, y + 8, x + 31, y + 11);
+            do Screen.drawRectangle(x + 28, y + 12, x + 31, y + 15);
+            do Screen.drawRectangle(x + 8, y + 16, x + 11, y + 19);
+            do Screen.drawRectangle(x + 16, y + 16, x + 19, y + 19);
+            do Screen.drawRectangle(x + 24, y + 16, x + 27, y + 19);
+            let x = x + 4;
+        }
+        else{
+            do Screen.setColor(false);
+            do Screen.drawRectangle(x + 16, y, x + 19, y + 3);
+            do Screen.drawRectangle(x + 20, y + 4, x + 23, y + 7);
+            do Screen.drawRectangle(x, y + 8, x + 3, y + 11);
+            do Screen.drawRectangle(x + 8, y + 8, x + 11, y + 11);
+            do Screen.drawRectangle(x + 16, y + 8, x + 19, y + 11);
+            do Screen.drawRectangle(x + 24, y + 8, x + 27, y + 11);
+            do Screen.drawRectangle(x + 24, y + 12, x + 27, y + 15);
+            do Screen.drawRectangle(x + 4, y + 16, x + 7, y + 19);
+            do Screen.drawRectangle(x + 12, y + 16, x + 15, y + 19);
+            do Screen.drawRectangle(x + 20, y + 16, x + 23, y + 19);
+            do Screen.setColor(true);
+            do Screen.drawRectangle(x + 4, y, x + 7, y + 3);
+            do Screen.drawRectangle(x, y + 4, x + 3, y + 7);
+            do Screen.drawRectangle(x - 4, y + 8, x - 1, y + 11);
+            do Screen.drawRectangle(x + 4, y + 8, x + 7, y + 11);
+            do Screen.drawRectangle(x + 12, y + 8, x + 15, y + 11);
+            do Screen.drawRectangle(x + 20, y + 8, x + 23, y + 11);
+            do Screen.drawRectangle(x - 4, y + 12, x - 1, y + 15);
+            do Screen.drawRectangle(x, y + 16, x + 3, y + 19);
+            do Screen.drawRectangle(x + 8, y + 16, x + 11, y + 19);
+            do Screen.drawRectangle(x + 16, y + 16, x + 19, y + 19);
+            let x = x - 4;
+        }
+        return;
+    }
+
+    method int getX(){
+        return x;
+    }
+
+    method boolean isHit(int a, int b){
+        if ((a > x) & (a < (x + 28)) & (b > y) & (b < (y + 20))){
+            return true;
+        }
+        return false;
+    }
+
+    method int kill(){
+        do draw(false);
+        do playDeathAnimation();
+        return 100;                     // killing a spaceship gives 100 points
+    }
+
+    method void playDeathAnimation(){
+        do deathAnimation(true);
+        do Sys.wait(30);
+        do deathAnimation(false);
+        do Sys.wait(60);
+        do deathAnimation(true);
+        do Sys.wait(30);
+        do deathAnimation(false);
+        return;
+    }
+
+    method void deathAnimation(boolean color){
+        do Screen.setColor(color);
+        do Screen.drawRectangle(x, y, x + 3, y + 3);
+        do Screen.drawRectangle(x + 16, y, x + 19, y + 3);
+        do Screen.drawRectangle(x + 4, y + 4, x + 7, y + 7);
+        do Screen.drawRectangle(x + 12, y + 4, x + 15, y + 7);
+        do Screen.drawRectangle(x + 4, y + 12, x + 7, y + 15);
+        do Screen.drawRectangle(x + 12, y + 12, x + 15, y + 15);
+        do Screen.drawRectangle(x, y + 16, x + 3, y + 19);
+        do Screen.drawRectangle(x + 16, y + 16, x + 19, y + 19);
+        return;
+    }
+}

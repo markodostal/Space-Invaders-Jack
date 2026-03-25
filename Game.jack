@@ -1,0 +1,525 @@
+class Game{
+    field Player player;
+    field Array aliens;
+    field int alienCount;
+    field Bullet playerBullet;
+    field boolean playerBulletExists;
+    field Ray alienBullet;
+    field boolean alienBulletExists;
+    field int score;
+    field int lives;
+    field Array bunkers;
+    field int bunkerCount;
+    field Spaceship spaceship;
+    field boolean spaceshipExists;
+
+    constructor Game new(){
+        do setGameScreen();
+
+        let player = Player.new();
+
+        let score = 0;
+        do updateScore(0);
+
+        let lives = 3;
+        do updateLives(0);
+
+        do createAliens();
+        do createBunkers();
+
+        return this;
+    }
+
+    method void dispose(){
+        do player.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void setGameScreen(){            // this method sets up the user interface
+        do Output.moveCursor(0, 0);
+        do Output.printString("Score: ");
+        do Output.moveCursor(0, 25);
+        do Output.printString("SPACE INVADERS");
+        do Output.moveCursor(0, 50);
+        do Output.printString("Lives: ");
+        return;
+    }
+
+    method void createAliens(){             // this method creates the aliens
+        var int row, column;
+        var int numberOfRows;
+        var int numberOfColumns;
+        var int spacing;
+        var int startX, startY;
+
+        let numberOfRows = 3;
+        let aliens = Array.new(40);
+        let alienCount = 0;
+
+        let row = 0;
+        while (row < numberOfRows){             // grid of aliens
+            if (row = 0){
+                let numberOfColumns = 12;
+                let spacing = 26;
+            }
+            if (row = 1){
+                let numberOfColumns = 10;
+                let spacing = 32;
+            }
+            if (row = 2){
+                let numberOfColumns = 8;
+                let spacing = 40;
+            }
+
+            let startX = (512 - (numberOfColumns * spacing)) / 2;
+            let startY = 48 + (row * 28);
+
+            let column = 0;
+            while (column < numberOfColumns){
+                let aliens[alienCount] = Alien.new(startX + (column * spacing), startY, row + 1);
+                let alienCount = alienCount + 1;
+                let column = column + 1;
+            }
+
+            let row = row + 1;
+        }
+        return;
+    }
+
+    method void createBunkers(){                // this method creates the bunkers that shield both the player and the aliens
+        var int i;
+        var int spacing;
+        var int startX, startY;
+
+        let bunkerCount = 6;
+        let spacing = 72;
+        let startX = 58;
+        let startY = 200;
+        let bunkers = Array.new(bunkerCount);
+
+        let i = 0;
+        while (i < bunkerCount){
+            let bunkers[i] = Bunker.new(startX + (i * spacing), startY);
+            let i = i + 1;
+        }
+        return;
+    }
+
+    method void movePlayerBullet(){             // this method moves the player bullet every frame
+        if (playerBullet.getY() < 15){
+            do playerBullet.dispose();
+            let playerBulletExists = false;
+        }
+        else{
+            do playerBullet.move();
+        }
+        return;
+    }
+
+    method void moveAlienBullet(){              // this method moves the alien bullet every frame
+        if (alienBullet.getY() > 240){
+            do alienBullet.dispose();
+            let alienBulletExists = false;
+        }
+        else{
+            do alienBullet.move();
+        }
+        return;
+    }
+
+    method boolean bulletsCollide(){            // this method checks if the player's and alien's bullet hit each other
+        var int px, py, ax, ay;
+
+        let px = playerBullet.getX();
+        let py = playerBullet.getY();
+
+        let ax = alienBullet.getX();
+        let ay = alienBullet.getY();
+
+        if ((px < (ax + 4)) & ((px + 4) > ax) & (py < (ay + 15)) & ((py + 5) > ay)){
+            return true;
+        }
+        return false;
+    }
+
+    method void updateScore(int points){        // this method updates the score
+        let score = score + points;
+        do Output.moveCursor(0, 7);
+        do Output.printString("    ");
+        do Output.moveCursor(0, 7);
+        do Output.printInt(score);
+        return;
+    }
+
+    method void updateLives(int life){          // this method updates the lives
+        let lives = lives + life;
+        do Output.moveCursor(0, 57);
+        do Output.printString("   ");
+        do Output.moveCursor(0, 57);
+        do Output.printInt(lives);
+        return;
+    }
+
+    method void playerWon(){                    // this method clears everything and sets the winning screen after which the player can continue the game
+        do Screen.clearScreen();
+        do Output.moveCursor(10, 25);
+        do Output.printString("WAVE CLEARED!");
+        do Output.moveCursor(12, 25);
+        do Output.printString("YOUR SCORE: ");
+        do Output.printInt(score);
+        do Output.moveCursor(18, 20);
+        do Output.printString("PRESS SPACE TO CONTINUE");
+        do waitForContinue();
+        return;
+    }
+
+    method void waitForContinue(){              // this method checks if the player wants to continue the game
+        var char key;
+
+        let key = 0;
+        while (true){
+            let key = Keyboard.keyPressed();
+
+            if (key = 32){                      // space - continues the game
+                do nextWave();
+                return;
+            }
+
+            if(key = 140){                      // esc - exits the game
+                do Sys.halt();
+            }
+        }
+        return;
+    }
+
+    method void nextWave(){                     // this method clears the screen and sets it up again with the next wave of aliens, keeping the score and lives from previous game
+        var int i;
+        var Alien a;
+        var Bunker b;
+
+        let i = 0;
+        while (i < alienCount){
+            let a = aliens[i];
+            do a.dispose();
+            let i = i + 1;
+        }
+        let i = 0;
+        while (i < bunkerCount){
+            let b = bunkers[i];
+            do b.dispose();
+            let i = i + 1;
+        }
+        do player.dispose();
+
+        if (spaceshipExists){
+            do spaceship.dispose();
+            let spaceshipExists = false;
+        }
+        if (alienBulletExists){
+            do alienBullet.dispose();
+            let alienBulletExists = false;
+        }
+        if (playerBulletExists){
+            do playerBullet.dispose();
+            let playerBulletExists = false;
+        }
+
+        do Screen.clearScreen();
+        do setGameScreen();
+        do updateScore(0);
+        do updateLives(1);                      // player gets one more life for clearing a wave
+        
+        do createAliens();
+        do createBunkers();
+        let player = Player.new();
+
+        return;
+    }
+
+    method void playerLost(){                    // this method clears everything and sets the losing screen after which the game is over
+        do Screen.clearScreen();
+        do Output.moveCursor(10, 25);
+        do Output.printString("YOU WERE INVADED!");
+        do Output.moveCursor(12, 25);
+        do Output.printString("YOUR SCORE: ");
+        do Output.printInt(score);
+        return;
+    }
+
+    method void run()                               // this is where we read player's input and update the game every frame
+	{
+		var char k;
+        var int i;
+        var Alien a;
+        var Bunker b;
+        var boolean alienAlive;
+        var int alienShootTimer;
+        var int shootingAlien;
+        var int alienMoveTimer;
+        var int alienShootTimer;
+        var int alienBulletMoveTimer;
+        var int alienMoveDirection;
+        var boolean hitEdge;
+        var boolean bulletHit;
+        var int aliensKilled;
+        var int points;
+        var int spaceshipTimer;
+		let k = 0;
+        let alienMoveTimer = 6;
+        let alienShootTimer = 100;
+        let alienMoveDirection = 1;
+        let aliensKilled = 0;
+        let spaceshipTimer = (59 * alienCount) - ((17 * aliensKilled) + (7 * alienShootTimer));
+	  
+		while (~(k = 140))                              // esc - exits the game
+		{
+            let k = Keyboard.keyPressed();              // firstly we check for player input, then we can update the game state
+
+			if ((k = 130) & (player.getX() > 20)) {     // left arrow - move player left
+                do player.moveLeft();
+            }
+            if ((k = 132) & (player.getX() < 484)) {    // right arrow - move player right
+                do player.moveRight();
+            }
+            if ((k = 32) & ~(playerBulletExists)){      // space - shoot
+                let playerBullet = Bullet.new(player.getX(), player.getY());
+                let playerBulletExists = true;
+            }
+
+            if (playerBulletExists){                    // we move the player bullet if it exists and check if it hit an alien, a bunker, an alien bullet or missed
+                do movePlayerBullet();
+
+                let i = 0;
+                let bulletHit = false;
+
+                while (~(bulletHit) & (i < alienCount)){
+                    let a = aliens[i];                  // Jack doesn't support aliens[i].isAlive()
+                    if (a.isAlive()){
+                        let bulletHit = a.isHit(playerBullet.getX(), playerBullet.getY());
+                        if (bulletHit){
+                            let points = a.kill();
+                            let aliensKilled = aliensKilled + 1;
+                            do updateScore(points);
+                            do playerBullet.dispose();
+                            let playerBulletExists = false;
+                        }
+                    }
+                    let i = i + 1;
+                }
+
+                let i = 0;
+                let bulletHit = false;
+
+                while (~(bulletHit) & (i < bunkerCount)){
+                    let b = bunkers[i];
+                    let bulletHit = b.isHit(playerBullet.getX(), playerBullet.getY());
+                    if (bulletHit){
+                        do playerBullet.dispose();
+                        let playerBulletExists = false;
+                    }
+                    let i = i + 1;
+                }
+
+                if (spaceshipExists){
+                    if (spaceship.isHit(playerBullet.getX(), playerBullet.getY())){
+                        let points = spaceship.kill();
+                        do spaceship.dispose();
+                        let spaceshipExists = false;
+                        do updateScore(points);
+                        do playerBullet.dispose();
+                        let playerBulletExists = false;
+                    }
+                }
+
+                if (alienBulletExists){
+                    if (bulletsCollide()){
+                        do playerBullet.explode();
+                        do playerBullet.dispose();
+                        let playerBulletExists = false;
+                        do alienBullet.dispose();
+                        let alienBulletExists = false;
+                    }
+                }
+            }
+
+            if (alienBulletExists){                 // we check if alien bullet exists, move it and check if it hit the player or one of the bunkers
+                if (alienBulletMoveTimer = 0){
+                    do moveAlienBullet();
+                    let alienBulletMoveTimer = 5;
+                    if (player.isHit(alienBullet.getX(), alienBullet.getY() + 4)){
+                        do player.playDeathAnimation();
+                        do player.dispose();
+                        let player = Player.new();
+                        do updateLives(-1);
+                        if (playerBulletExists){
+                            do playerBullet.dispose();
+                            let playerBulletExists = false;
+                        }
+                        do alienBullet.dispose();
+                        let alienBulletExists = false;
+                        let alienShootTimer = 200;
+                    }
+
+                    let i = 0;
+                    let bulletHit = false;
+
+                    while (~(bulletHit) & (i < bunkerCount)){
+                        let b = bunkers[i];
+                        let bulletHit = b.isHit(alienBullet.getX(), alienBullet.getY());
+                        if (bulletHit){
+                            do alienBullet.dispose();
+                            let alienBulletExists = false;
+                        }
+                        let i = i + 1;
+                    }
+                }
+                else{
+                    let alienBulletMoveTimer = alienBulletMoveTimer - 1;
+                }
+            }
+            else{                                   // if the alien bullet doesn't exist we create one (if we can)
+                if (~(alienShootTimer > 0)){
+                    let i = alienCount - 1;
+                    while (i > -1){
+                        let a = aliens[i];
+                        if (a.isAlive()){
+                            if ((a.getX() > (player.getX() - 40)) & (a.getX() < (player.getX() + 48))){
+                                if (a.getType() = 3){
+                                    let alienBullet = Ray.new(a.getX() + 10, a.getY() + 20);
+                                }
+                                if (a.getType() = 2){
+                                    let alienBullet = Ray.new(a.getX() + 7, a.getY() + 20);
+                                }
+                                if (a.getType() = 1){
+                                    let alienBullet = Ray.new(a.getX() + 4, a.getY() + 20);    
+                                }
+                                let alienBulletExists = true;
+                                let alienBulletMoveTimer = 5;
+                                let i = -1;
+                            }
+                        }
+                        let i = i - 1;
+                    }
+                    let alienShootTimer = 100;
+                }
+                else{
+                    let alienShootTimer = alienShootTimer - 1;
+                }
+            }
+
+            if (aliensKilled = alienCount){             // we check if the player killed all aliens
+                do playerWon();
+                let k = 0;
+                let alienMoveTimer = 6;
+                let alienShootTimer = 100;
+                let alienMoveDirection = 1;
+                let aliensKilled = 0;
+                do Sys.wait(100);
+            }
+
+            if (lives < 1){                             // we check if the player has no lives left
+                do playerLost();
+                return;
+            }
+
+            let i = 0;                                  // we check if the aliens got too close to the ground (invaded)
+            while (i < alienCount){
+                let a = aliens[i];
+                if (a.getY() > 179){
+                    do playerLost();
+                    return;
+                }
+                let i = i + 1;
+            }
+
+            if (~(spaceshipExists)){                    // this creates the alien spaceship that sometimes flies over the screen for extra points
+                if (spaceshipTimer = 0){
+                    if (alienMoveDirection = 1){
+                        let spaceship = Spaceship.new(false);
+                    }
+                    else{
+                        let spaceship = Spaceship.new(true);
+                    }
+                    let spaceshipExists = true;
+                    let spaceshipTimer = (59 * alienCount) - ((17 * aliensKilled) + (7 * alienShootTimer));     // these are just some pseudo random numbers that determine how often the spaceship appears
+                }
+                else{
+                    let spaceshipTimer = spaceshipTimer - 1;
+                }
+            }
+            
+
+            if (~(alienMoveTimer > 0)){                 // we check if aliens can move this frame
+                let i = 0;
+                while (i < alienCount){
+                    let a = aliens[i];
+                    let alienAlive = a.isAlive();
+                    if (alienAlive){
+                        do a.move(alienMoveDirection);
+                        if ((a.getX() > 480) | (a.getX() < 10)){
+                            let hitEdge = true;
+                        }
+                    }
+                    let i = i + 1;
+                }
+
+                if (spaceshipExists){                   // move the spaceship
+                    do spaceship.move();
+                    if ((spaceship.getX() > 474) | spaceship.getX() < 6){
+                        do spaceship.dispose();
+                        let spaceshipExists = false;
+                    }
+                }
+
+                if (hitEdge){                           // we check if aliens hit the edge of screen, move them down and reverse their direction
+                    let i = 0;
+                    while (i < alienCount){
+                        let a = aliens[i];
+                        let alienAlive = a.isAlive();
+                        if (alienAlive){
+                            do a.move(0);
+                        }
+                        let i = i + 1;
+                    }
+                    let alienMoveDirection = - alienMoveDirection;
+                    let hitEdge = false;
+                }
+
+                if (aliensKilled > 24){                      // aliens speed up as there are less of them
+                    let alienMoveTimer = 1;
+                }
+                else{
+                    if (aliensKilled > 19){
+                        let alienMoveTimer = 2;
+                    }
+                    else{
+                        if (aliensKilled > 14){
+                            let alienMoveTimer = 3;
+                        }
+                        else{
+                            if (aliensKilled > 9){
+                                let alienMoveTimer = 4;
+                            }
+                            else{
+                                if (aliensKilled > 4){
+                                    let alienMoveTimer = 5;
+                                }
+                                else{
+                                    let alienMoveTimer = 6;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else{
+                let alienMoveTimer = alienMoveTimer - 1;
+            }
+
+            do Sys.wait(6);
+		}
+		
+		return;
+	}
+}

@@ -1,0 +1,63 @@
+class Bullet{
+    field int x, y;
+
+    constructor Bullet new(int a, int b){       // this is the player bullet class, it takes care of drawing the bullet, its movement and whatever variables we need
+        let x = a + 2;
+        let y = b - 6;
+        do draw();
+        return this;
+    }
+
+    method void dispose(){
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x, y, x + 3, y + 5);
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void draw(){
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x, y, x + 3, y + 5);
+        return;
+    }
+
+    method int getX(){
+        return x;
+    }
+
+    method int getY(){
+        return y;
+    }
+
+    method void explode(){              // this method plays an animation if the alien bullet and player bullet hit each other
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x, y, x + 3, y + 5);
+        do explosion(true);
+        do Sys.wait(30);
+        do explosion(false);
+        do Sys.wait(40);
+        do explosion(true);
+        do Sys.wait(30);
+        do explosion(false);
+        return;
+    }
+
+    method void explosion(boolean color){
+        do Screen.setColor(color);
+        do Screen.drawRectangle(x - 2, y - 2, x - 1, y - 1);
+        do Screen.drawRectangle(x, y, x + 3, y + 3);
+        do Screen.drawRectangle(x + 4, y - 2, x + 5, y - 1);
+        do Screen.drawRectangle(x - 2, y + 4, x - 1, y + 5);
+        do Screen.drawRectangle(x + 4, y + 4, x + 5, y + 5);
+        return;
+    }
+
+    method void move(){
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x, y + 3, x + 3, y + 5);
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x, y - 2, x + 3, y - 1);
+        let y = y - 2;
+        return;
+    }
+}
